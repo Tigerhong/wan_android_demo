@@ -1,6 +1,6 @@
 # wan_android_demo
 
-一个使用wanAndroid接口数据的demo
+一个使用wanAndroid接口数据的FlutterDemo
 
 ## Getting Started
 
