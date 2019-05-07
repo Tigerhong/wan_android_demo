@@ -11,18 +11,21 @@ typedef Future<HomeArticleModel> RequestData(int page);
 
 ///文章列表页面
 class ArticleListWidget extends StatefulWidget {
+  String TAG;
   RequestData request;
   int headerCount;
   Widget header;
 
   ArticleListWidget(
-      {this.headerCount = 0, this.header, @required this.request});
+      {this.TAG, this.headerCount = 0, this.header, @required this.request});
 
   @override
   State<StatefulWidget> createState() => _ArticleListState();
 }
 
-class _ArticleListState extends State<ArticleListWidget> {
+class _ArticleListState extends State<ArticleListWidget>
+    with AutomaticKeepAliveClientMixin {
+  ///继承AutomaticKeepAliveClientMixin用以是widget能保存
   List<HomeArticleItemModel> _articleDatas = List();
   int page = 0;
   int _articleSize = 0;
@@ -31,22 +34,33 @@ class _ArticleListState extends State<ArticleListWidget> {
   @override
   void initState() {
     super.initState();
+    Log.logT(widget.TAG, "initState()");
     _getArticleData(page);
+  }
+
+  @override
+  void dispose() {
+    Log.logT(widget.TAG, "dispose()");
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: HeadFootListWidget(
-        _listItemCreator,
-        _articleDatas.length,
-        headerItemCount: widget.headerCount,
-        headerItemCreator: _headerItemCreator,
-        moreListener: _moreListener,
-        moreCreator: _moreCreator,
-        refreshListener: _refreshListener,
-        scrollControllerListener: _scrollControllerListener,
-      ),
+      body: _articleDatas.length == 0
+          ? new Center(
+              child: Text("loading..."),
+            )
+          : HeadFootListWidget(
+              _listItemCreator,
+              _articleDatas.length,
+              headerItemCount: widget.headerCount,
+              headerItemCreator: _headerItemCreator,
+              moreListener: _moreListener,
+              moreCreator: _moreCreator,
+              refreshListener: _refreshListener,
+              scrollControllerListener: _scrollControllerListener,
+            ),
       floatingActionButton: _getFABWidget(),
     );
   }
@@ -136,4 +150,7 @@ class _ArticleListState extends State<ArticleListWidget> {
     _sc?.animateTo(d,
         duration: new Duration(seconds: 2), curve: Curves.fastOutSlowIn);
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }

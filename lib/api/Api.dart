@@ -9,7 +9,13 @@ class Api {
 
   ///获取公众号列表
   static String HOME_WXARTICLE_CHAPTERS_URL = _baseUrl + "/wxarticle/chapters/json";
-
   ///查看某个公众号历史数据
   static String HOME_WXARTICLE_LIST_URL = _baseUrl + "/wxarticle/list";
+
+  ///获取项目列表
+  static String PROJECT_CHAPTERS_URL = _baseUrl + "/project/tree/json";
+
+  ///查看某个项目列表数据
+  static String PROJECT_LIST_URL = _baseUrl + "/project/list";
+
 }

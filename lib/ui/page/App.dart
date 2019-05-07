@@ -13,7 +13,7 @@ class App extends StatefulWidget {
 
 class _AppState extends State<App> {
   int _currentIndex = 0;
-  static List<String> titles = ["博文", "项目", "体系", "公众号", "我"];
+  static List<String> titles = ["博文", "项目", "公众号", "体系", "我"];
   PageController _pageController;
   List<BottomNavigationBarItem> _bottomItems = [
     BottomNavigationBarItem(

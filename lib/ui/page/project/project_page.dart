@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:wan_android_demo/api/HttpService.dart';
+import 'package:wan_android_demo/fonts/IconF.dart';
+import 'package:wan_android_demo/model/porjectClassification/ProjectClassificationItemModel.dart';
+import 'package:wan_android_demo/model/porjectClassification/ProjectClassificationModel.dart';
+import 'package:wan_android_demo/ui/page/article_list/ArticleListWidget.dart';
 import 'package:wan_android_demo/ui/widget/HeadFootListWidget.dart';
 import 'package:wan_android_demo/utils/Log.dart';
 
@@ -7,74 +12,60 @@ class ProjectPage extends StatefulWidget {
   State<StatefulWidget> createState() => _ProjectState();
 }
 
-class _ProjectState extends State<ProjectPage> {
-  var TAG = "listview";
-  int _dataCount = 30;
+class _ProjectState extends State<ProjectPage> with TickerProviderStateMixin{
+  TabController controller;
+  List<ProjectClassificationItemModel> _list = List();
+
+  @override
+  void initState() {
+    super.initState();
+    HttpService().getPorjectChapters((ProjectClassificationModel bean) {
+      List<ProjectClassificationItemModel> data = bean.data;
+      Log.logT("_ProjectState", " 项目数据${bean.data.length}");
+      if (data?.length > 0) {
+        _list = data;
+        controller = TabController(length: _list.length, vsync: this);
+        setState(() {});
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text("项目"),
-        ),
-        body: HeadFootListWidget(
-          _listItemCreator,
-          _dataCount,
-          headerItemCreator: _headerItemCreator,
-          headerItemCount: 2,
-          footerItemCreator: _FooterItemCreator,
-          footererItemCount: 3,
-          moreListener: _moreListener,
-          moreCreator: _moreCreator,
-          refreshListener: _refreshListener,
-        ));
-  }
-
-  Widget _listItemCreator(BuildContext context, int index) {
-    return Text("我是item$index");
-  }
-
-  Widget _headerItemCreator(BuildContext context, int index) {
-    return Text("我是header$index");
-  }
-
-  Widget _FooterItemCreator(BuildContext context, int index) {
-    return Text("我是Footer$index");
-  }
-
-  loadMore() {
-    Future.delayed(Duration(seconds: 5), () {
-      setState(() {
-        _dataCount += 10;
-      });
-    });
-  }
-
-  Future<void> _moreListener() async {
-    await Future.delayed(Duration(seconds: 2), () {
-      _dataCount += 10;
-      setState(() {});
-    });
-  }
-
-  Widget _moreCreator(BuildContext context) {
-    return Container(
-      height: 50,
-      child: Center(
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[CircularProgressIndicator(),Container(margin: EdgeInsets.all(10),child: Text("努力加载中....."),)],
-        ),
+      appBar: AppBar(
+        centerTitle: true,
+        title: Text("项目"),
+        actions: <Widget>[IconButton(icon: Icon(IconF.search))],
+        bottom: _list.length > 0
+            ? TabBar(
+            isScrollable: true,
+            indicatorSize: TabBarIndicatorSize.label,
+            indicatorPadding: EdgeInsets.only(bottom: 2),
+            indicatorColor: Colors.white,
+            labelColor: Colors.white,
+            indicatorWeight: 1.0,
+            controller: controller,
+            tabs: _list.map((ProjectClassificationItemModel _bean) {
+              return Tab(text: _bean?.name);
+            }).toList())
+            : null,
+      ),
+      body: _list.length > 0
+          ? TabBarView(
+          controller: controller,
+          children: _list.map((ProjectClassificationItemModel _bean) {
+            return ArticleListWidget(
+                TAG: "项目${_bean.name}",
+                headerCount: 0,
+                request: (page) {
+                  return HttpService().getPorjectListById(_bean.id, page);
+                });
+          }).toList())
+          : Center(
+        child: Text("暂无数据"),
       ),
     );
-  }
-
-  Future<void> _refreshListener() async {
-    Log.log('======滑动到最顶部======');
-    await Future.delayed(Duration(seconds: 2), () {
-      _dataCount = 10;
-      setState(() {});
-    });
   }
 }
 

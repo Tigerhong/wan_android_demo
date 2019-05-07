@@ -1,7 +1,7 @@
-part of 'WeChatItemModel.dart';
+part of 'ProjectClassificationItemModel.dart';
 
-WeChatItemModel _WeChatItemModelFromJson(Map<String, dynamic> json) {
-  return WeChatItemModel(
+ProjectClassificationItemModel _fromJson(Map<String, dynamic> json) {
+  return ProjectClassificationItemModel(
     children: json["children"],
     courseId: json["courseId"] as int,
     id: json["id"] as int,

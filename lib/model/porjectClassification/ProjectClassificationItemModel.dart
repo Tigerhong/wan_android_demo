@@ -1,8 +1,8 @@
 import 'package:json_annotation/json_annotation.dart';
-part 'WeChatItemModel.g.dart';
+part 'ProjectClassificationItemModel.g.dart';
 
 @JsonSerializable()
-class WeChatItemModel {
+class ProjectClassificationItemModel {
   var children;
   int courseId;
   int id;
@@ -12,10 +12,10 @@ class WeChatItemModel {
   bool userControlSetTop;
   int visible;
 
-  WeChatItemModel({this.children, this.courseId, this.id, this.name, this.order,
+  ProjectClassificationItemModel({this.children, this.courseId, this.id, this.name, this.order,
       this.parentChapterId, this.userControlSetTop, this.visible});
 
-  factory WeChatItemModel.fromJson(Map<String, dynamic> json)=>
-      _WeChatItemModelFromJson(json);
+  factory ProjectClassificationItemModel.fromJson(Map<String, dynamic> json)=>
+      _fromJson(json);
 
 }
