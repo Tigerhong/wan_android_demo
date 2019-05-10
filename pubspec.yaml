@@ -26,6 +26,8 @@ dependencies:
   dio: 2.1.2
   json_serializable: ^2.2.0
   flutter_webview_plugin: ^0.3.3
+  shared_preferences: ^0.5.2
+  toast: ^0.1.4
 dev_dependencies:
   flutter_test:
     sdk: flutter

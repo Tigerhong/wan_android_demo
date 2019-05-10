@@ -1,4 +1,3 @@
-
 import 'package:wan_android_demo/model/BaseModel.dart';
 import 'package:wan_android_demo/model/home/homeArticle/HomeArticleDataModel.dart';
 part 'package:wan_android_demo/model/home/homeArticle/HomeArticleModel.g.dart';

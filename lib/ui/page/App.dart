@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:wan_android_demo/common/User.dart';
 import 'package:wan_android_demo/fonts/IconF.dart';
 import 'package:wan_android_demo/ui/page/blog/blog_page.dart';
 import 'package:wan_android_demo/ui/page/konwledge_system/konwledge_system_page.dart';
-import 'package:wan_android_demo/ui/page/mime/blog_page.dart';
+import 'package:wan_android_demo/ui/page/mime/mime_page.dart';
 import 'package:wan_android_demo/ui/page/project/project_page.dart';
 import 'package:wan_android_demo/ui/page/wechat/wechat_page.dart';
 
@@ -59,6 +60,7 @@ class _AppState extends State<App> {
 
   @override
   Widget build(BuildContext context) {
+    User().refreshUserData();
     return MaterialApp(
         title: "WanAndroid",
         theme: ThemeData(primaryColor: Colors.red),

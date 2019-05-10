@@ -17,19 +17,25 @@ class ArticleListWidget extends StatefulWidget {
   Widget header;
 
   ArticleListWidget(
-      {this.TAG, this.headerCount = 0, this.header, @required this.request});
+      {Key key,
+      this.TAG = "ArticleListWidget",
+      this.headerCount = 0,
+      this.header,
+      @required this.request})
+      : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _ArticleListState();
+  State<StatefulWidget> createState() => ArticleListState();
 }
 
-class _ArticleListState extends State<ArticleListWidget>
+class ArticleListState extends State<ArticleListWidget>
     with AutomaticKeepAliveClientMixin {
   ///继承AutomaticKeepAliveClientMixin用以是widget能保存
   List<HomeArticleItemModel> _articleDatas = List();
   int page = 0;
   int _articleSize = 0;
   bool _isShowFAB = false;
+  String emptyStr = "loading...";
 
   @override
   void initState() {
@@ -49,7 +55,7 @@ class _ArticleListState extends State<ArticleListWidget>
     return Scaffold(
       body: _articleDatas.length == 0
           ? new Center(
-              child: Text("loading..."),
+              child: Text(emptyStr),
             )
           : HeadFootListWidget(
               _listItemCreator,
@@ -91,18 +97,25 @@ class _ArticleListState extends State<ArticleListWidget>
     );
   }
 
+  ///重新加载数据
+  void reLoadData() {
+    Log.log("reLoadData", tag: widget.TAG);
+    _getArticleData(page = 0);
+  }
+
   Future<void> _refreshListener() async {
-    await widget.request(page = 0).then((bean) {
-      if (!mounted) {
-        return;
-      }
-      _articleDatas.clear();
-      _articleSize = bean.data.size;
-      Log.log("当前是第$page页，共$_articleSize", tag: "getArticleData");
-      List<HomeArticleItemModel> data = bean.data.datas;
-      _articleDatas.addAll(data);
-      setState(() {});
-    });
+//    await widget.request(page = 0).then((bean) {
+//      if (!mounted) {
+//        return;
+//      }
+//      _articleDatas.clear();
+//      _articleSize = bean.data.size;
+//      Log.log("当前是第$page页，共$_articleSize", tag: "getArticleData");
+//      List<HomeArticleItemModel> data = bean.data.datas;
+//      _articleDatas.addAll(data);
+//      setState(() {});
+//    });
+    _getArticleData(page = 0);
   }
 
   ScrollController _sc;
@@ -122,10 +135,25 @@ class _ArticleListState extends State<ArticleListWidget>
       if (!mounted) {
         return;
       }
-      _articleSize += bean.data.size;
-      Log.log("当前是第$page页，共$_articleSize", tag: "getArticleData");
-      List<HomeArticleItemModel> data = bean.data.datas;
-      _articleDatas.addAll(data);
+      if (page == 0) {
+        //当page==0的时候，说明下拉刷新，需要将数据重置
+        _articleDatas.clear();
+        _articleSize = _articleDatas.length;
+      }
+      if (bean.errorCode == 0) {
+        _articleSize += bean?.data?.datas?.length ?? 0;
+        Log.log("当前是第$page页，共$_articleSize", tag: "getArticleData");
+        if (_articleSize == 0) {
+          emptyStr = "暂无数据";
+          Log.log("$emptyStr", tag: "getArticleData");
+        } else {
+          List<HomeArticleItemModel> data = bean.data.datas;
+          _articleDatas.addAll(data);
+        }
+      } else {
+        emptyStr = bean.errorMsg;
+        Log.log("${bean.errorMsg}", tag: "getArticleData");
+      }
       setState(() {});
     });
   }
