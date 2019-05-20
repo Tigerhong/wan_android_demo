@@ -4,6 +4,7 @@ import 'package:wan_android_demo/common/User.dart';
 import 'package:wan_android_demo/model/home/homeArticle/HomeArticleModel.dart';
 import 'package:wan_android_demo/model/home/homebanner/HomeBannerModel.dart';
 import 'package:wan_android_demo/model/porjectClassification/ProjectClassificationModel.dart';
+import 'package:wan_android_demo/model/systemdata/SystemDataModel.dart';
 import 'dart:convert';
 import 'package:wan_android_demo/utils/Log.dart';
 
@@ -124,6 +125,25 @@ class HttpService {
       Log.logT(TAG,
           "postUncollectArticle  ${res.data}  ${jsonMap["errorCode"] == 0}");
       callBack(jsonMap["errorCode"] == 0, jsonMap["errorMsg"]);
+    });
+  }
+
+  ///获取体系数据
+  void getSystemDataList(Function callBack) async {
+    return await Dio()
+        .get(Api.SYSTEM_DATA_LIST_URL,
+        options: _getOptions)
+        .then((rep) {
+      callBack(SystemDataModel.fromJson(rep.data));
+    });
+  }
+/// 知识体系下的文章
+  Future<HomeArticleModel> getSystemDataInfoById(int cid, int page) async {
+    return await Dio()
+        .get(Api.SYSTEM_DATA_INFO_URL + "/$page/json?cid=$cid",
+        options: _getOptions)
+        .then((rep) {
+      return HomeArticleModel.fromJson(rep.data);
     });
   }
 }

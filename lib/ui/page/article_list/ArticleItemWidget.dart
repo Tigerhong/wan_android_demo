@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:provide/provide.dart';
 import 'package:toast/toast.dart';
 import 'package:wan_android_demo/api/HttpService.dart';
 import 'package:wan_android_demo/common/GlobalConfig.dart';
 import 'package:wan_android_demo/common/Router.dart';
 import 'package:wan_android_demo/fonts/IconF.dart';
 import 'package:wan_android_demo/model/home/homeArticle/HomeArticleItemModel.dart';
+import 'package:wan_android_demo/ui/page/RefreshWidget.dart';
 
 ///
 /// 这里使用了三种方式隐藏view
@@ -160,6 +162,8 @@ class _ArticleItemState<ArticleItemWidget> extends State {
       }
       Toast.show(tip, context,
           duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
+
+      Provide.value<RefreshWidget>(context).refresh();
       if (isSuccess) {
         setState(() {
           //这样可以刷新当前item

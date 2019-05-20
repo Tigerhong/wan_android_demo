@@ -142,17 +142,17 @@ class ArticleListState extends State<ArticleListWidget>
       }
       if (bean.errorCode == 0) {
         _articleSize += bean?.data?.datas?.length ?? 0;
-        Log.log("当前是第$page页，共$_articleSize", tag: "getArticleData");
+        Log.log("当前是第$page页共${bean?.data?.pageCount}页，共${bean?.data?.total}条数据", tag: "${widget.TAG} getArticleData");
         if (_articleSize == 0) {
           emptyStr = "暂无数据";
-          Log.log("$emptyStr", tag: "getArticleData");
+          Log.log("$emptyStr", tag: "${widget.TAG} getArticleData");
         } else {
           List<HomeArticleItemModel> data = bean.data.datas;
           _articleDatas.addAll(data);
         }
       } else {
         emptyStr = bean.errorMsg;
-        Log.log("${bean.errorMsg}", tag: "getArticleData");
+        Log.log("${bean.errorMsg}", tag: "${widget.TAG} getArticleData");
       }
       setState(() {});
     });

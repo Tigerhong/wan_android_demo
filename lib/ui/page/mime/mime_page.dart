@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provide/provide.dart';
 import 'package:wan_android_demo/api/HttpService.dart';
 import 'package:wan_android_demo/common/GlobalConfig.dart';
 import 'package:wan_android_demo/common/Router.dart';
 import 'package:wan_android_demo/common/User.dart';
+import 'package:wan_android_demo/ui/page/RefreshWidget.dart';
 import 'package:wan_android_demo/ui/page/article_list/ArticleListWidget.dart';
 import 'package:wan_android_demo/utils/Log.dart';
 
@@ -22,6 +24,12 @@ class _MimeState extends State<MimePage> {
 
   @override
   Widget build(BuildContext context) {
+
+    final currentCounter = Provide.value<RefreshWidget>(context);
+    currentCounter.addListener((){
+      Log.logT("MimePage", "setListener+++++++");
+      globalKey?.currentState?.reLoadData();
+    });
     Log.logT("MimePage", "build");
     return Scaffold(
         appBar: AppBar(

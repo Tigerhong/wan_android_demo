@@ -40,5 +40,13 @@ class Api {
   ///https://www.wanandroid.com/lg/uncollect_originId/2333/json
   static String UNCOLLECT_URL = _baseUrl + "/lg/uncollect_originId/";
 
+  ///体系数据
+  ///https://www.wanandroid.com/tree/json
+  static String SYSTEM_DATA_LIST_URL = _baseUrl + "/tree/json";
 
+  ///知识体系下的文章
+  ///https://www.wanandroid.com/article/list/0/json?cid=60
+  ///cid 分类的id，上述二级目录的id
+  ///	页码：拼接在链接上，从0开始。
+  static String SYSTEM_DATA_INFO_URL = _baseUrl + "/article/list";
 }
