@@ -57,33 +57,28 @@ class _AppState extends State<App> {
     super.dispose();
     _pageController.dispose();
   }
-
   @override
   Widget build(BuildContext context) {
     User().refreshUserData();
-    return MaterialApp(
-        title: "WanAndroid",
-        theme: ThemeData(primaryColor: Colors.red),
-        home: Scaffold(
-          //Center控件使其子控件在中间位置
-          body: PageView(
-            physics: NeverScrollableScrollPhysics(),
-            children: _page,
-            onPageChanged: _onPageChanged,
-            controller: _pageController,
-          ),
-          bottomNavigationBar: BottomNavigationBar(
-            type: BottomNavigationBarType.fixed,
-            items: _bottomItems,
+    return Scaffold(
+      //Center控件使其子控件在中间位置
+      body: PageView(
+        physics: NeverScrollableScrollPhysics(),
+        children: _page,
+        onPageChanged: _onPageChanged,
+        controller: _pageController,
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        items: _bottomItems,
 //            fixedColor:  Colors.red,
-            currentIndex: _currentIndex,
-            onTap: (int index) {
-              _pageController.jumpToPage(index);
-            },
-          ),
-        ));
+        currentIndex: _currentIndex,
+        onTap: (int index) {
+          _pageController.jumpToPage(index);
+        },
+      ),
+    );
   }
-
   void _onPageChanged(int index) {
     setState(() {
       _currentIndex = index;

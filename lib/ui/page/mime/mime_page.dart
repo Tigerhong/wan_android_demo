@@ -24,9 +24,8 @@ class _MimeState extends State<MimePage> {
 
   @override
   Widget build(BuildContext context) {
-
     final currentCounter = Provide.value<RefreshWidget>(context);
-    currentCounter.addListener((){
+    currentCounter.addListener(() {
       Log.logT("MimePage", "setListener+++++++");
       globalKey?.currentState?.reLoadData();
     });
@@ -64,11 +63,12 @@ class _MimeState extends State<MimePage> {
         ));
   }
 
-  void openLoginRegister(BuildContext context) async  {
-    var openLoginRegister =await Router.openLoginRegister(context);
-    bool isReload=openLoginRegister["isReload"];
+  void openLoginRegister(BuildContext context) async {
+    Map openLoginRegister = await Router.openLoginRegister(context);
+    if (openLoginRegister ?? true) return;
+    bool isReload = openLoginRegister["isReload"];
     Log.logT("MimePage", "openLoginRegister $isReload");
-    if(isReload){
+    if (isReload) {
       globalKey.currentState.reLoadData();
     }
   }
