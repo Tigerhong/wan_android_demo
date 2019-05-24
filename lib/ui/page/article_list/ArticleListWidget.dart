@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:wan_android_demo/common/GlobalConfig.dart';
+import 'package:wan_android_demo/common/localization/Language.dart';
 import 'package:wan_android_demo/fonts/IconF.dart';
 import 'package:wan_android_demo/model/home/homeArticle/HomeArticleItemModel.dart';
 import 'package:wan_android_demo/model/home/homeArticle/HomeArticleModel.dart';
@@ -35,7 +36,7 @@ class ArticleListState extends State<ArticleListWidget>
   int page = 0;
   int _articleSize = 0;
   bool _isShowFAB = false;
-  String emptyStr = "loading...";
+  String emptyStr = "Loading...";
 
   @override
   void initState() {
@@ -52,6 +53,7 @@ class ArticleListState extends State<ArticleListWidget>
 
   @override
   Widget build(BuildContext context) {
+    emptyStr = Language.getString(context).tip_nodata();
     return Scaffold(
       body: _articleDatas.length == 0
           ? new Center(
@@ -144,7 +146,7 @@ class ArticleListState extends State<ArticleListWidget>
         _articleSize += bean?.data?.datas?.length ?? 0;
         Log.log("当前是第$page页共${bean?.data?.pageCount}页，共${bean?.data?.total}条数据", tag: "${widget.TAG} getArticleData");
         if (_articleSize == 0) {
-          emptyStr = "暂无数据";
+          emptyStr = Language.getString(context).tip_nodata();
           Log.log("$emptyStr", tag: "${widget.TAG} getArticleData");
         } else {
           List<HomeArticleItemModel> data = bean.data.datas;

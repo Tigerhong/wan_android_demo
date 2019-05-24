@@ -6,7 +6,7 @@ import 'package:wan_android_demo/common/GlobalConfig.dart';
 import 'package:wan_android_demo/common/Router.dart';
 import 'package:wan_android_demo/fonts/IconF.dart';
 import 'package:wan_android_demo/model/home/homeArticle/HomeArticleItemModel.dart';
-import 'package:wan_android_demo/ui/page/RefreshWidget.dart';
+import 'package:wan_android_demo/state/provide/RefreshWidget.dart';
 
 ///
 /// 这里使用了三种方式隐藏view

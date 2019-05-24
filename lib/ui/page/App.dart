@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:wan_android_demo/common/User.dart';
+import 'package:wan_android_demo/common/localization/Language.dart';
 import 'package:wan_android_demo/fonts/IconF.dart';
+import 'package:wan_android_demo/ui/page/app_drawer/AppDrawer.dart';
 import 'package:wan_android_demo/ui/page/blog/blog_page.dart';
 import 'package:wan_android_demo/ui/page/konwledge_system/konwledge_system_page.dart';
-import 'package:wan_android_demo/ui/page/mime/mime_page.dart';
 import 'package:wan_android_demo/ui/page/project/project_page.dart';
 import 'package:wan_android_demo/ui/page/wechat/wechat_page.dart';
+import 'package:wan_android_demo/utils/Log.dart';
 
 class App extends StatefulWidget {
   @override
@@ -13,38 +15,54 @@ class App extends StatefulWidget {
 }
 
 class _AppState extends State<App> {
+  String TAG = "_AppState";
   int _currentIndex = 0;
-  static List<String> titles = ["博文", "项目", "公众号", "体系", "我"];
+  List<String> titles = [];
   PageController _pageController;
-  List<BottomNavigationBarItem> _bottomItems = [
-    BottomNavigationBarItem(
-      icon: Icon(IconF.blog),
-      title: Text(titles[0]),
-    ),
-    BottomNavigationBarItem(
-      icon: Icon(IconF.project),
-      title: Text(titles[1]),
-    ),
-    BottomNavigationBarItem(
-      icon: Icon(IconF.wechat),
-      title: Text(titles[2]),
-    ),
-    BottomNavigationBarItem(
-      icon: Icon(IconF.tree),
-      title: Text(titles[3]),
-    ),
-    BottomNavigationBarItem(
-      icon: Icon(IconF.me),
-      title: Text(titles[4]),
-    ),
-  ];
-  final List<Widget> _page = [
-    BlogPage(),
-    ProjectPage(),
-    WeCahtPage(),
-    KnowledgeSystemsPage(),
-    MimePage(),
-  ];
+  List<BottomNavigationBarItem> _bottomItems = [];
+  List<Widget> _page = [];
+
+  @override
+  void didUpdateWidget(App oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    Log.logT(TAG, "didUpdateWidget");
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    Log.logT(TAG, "didChangeDependencies");
+    titles = [
+      Language.getString(context).app_bowen(),
+      Language.getString(context).app_project(),
+      Language.getString(context).app_wechat(),
+      Language.getString(context).app_systems()
+    ];
+    _bottomItems = [
+      BottomNavigationBarItem(
+        icon: Icon(IconF.blog),
+        title: Text(titles[0]),
+      ),
+      BottomNavigationBarItem(
+        icon: Icon(IconF.project),
+        title: Text(titles[1]),
+      ),
+      BottomNavigationBarItem(
+        icon: Icon(IconF.wechat),
+        title: Text(titles[2]),
+      ),
+      BottomNavigationBarItem(
+        icon: Icon(IconF.tree),
+        title: Text(titles[3]),
+      ),
+    ];
+    _page = [
+      BlogPage(title: titles[0]),
+      ProjectPage(title: titles[1]),
+      WeCahtPage(title: titles[2]),
+      KnowledgeSystemsPage(title: titles[3]),
+    ];
+  }
 
   @override
   void initState() {
@@ -57,10 +75,12 @@ class _AppState extends State<App> {
     super.dispose();
     _pageController.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     User().refreshUserData();
     return Scaffold(
+      drawer: AppDrawer(),
       //Center控件使其子控件在中间位置
       body: PageView(
         physics: NeverScrollableScrollPhysics(),
@@ -79,6 +99,7 @@ class _AppState extends State<App> {
       ),
     );
   }
+
   void _onPageChanged(int index) {
     setState(() {
       _currentIndex = index;

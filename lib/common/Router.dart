@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wan_android_demo/ui/page/collect/article_collect_page.dart';
 import 'package:wan_android_demo/ui/page/login/LoginRegisterPage.dart';
 import 'package:wan_android_demo/ui/web/WebViewPage.dart';
 
@@ -15,7 +16,11 @@ class Router{
       return LoginRegisterPage();
     }));
   }
-
+  static openArticleCollectPage(BuildContext context){
+    return Navigator.push(context, new MaterialPageRoute(builder: (context) {
+      return ArticleCollectPage();
+    }));
+  }
   void back<T>(BuildContext context,{T args}) {
     Navigator.of(context).pop(args);
   }

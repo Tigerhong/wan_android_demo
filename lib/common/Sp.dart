@@ -12,35 +12,18 @@ class Sp {
     });
   }
 
-  static putUserName(String value) {
-    put("username", value);
+  static getSAsync(String key) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString(key);
   }
+}
 
-  static putPassword(String value) {
-    put("password", value);
-  }
-
-  static putCookie(String value) {
-    put("cookie", value);
-  }
-
-  static putCookieExpires(String value) {
-    put("expires", value);
-  }
-
-  static getUserName(Function callback) {
-    getS("username", callback);
-  }
-
-  static getPassword(Function callback) {
-    getS("password", callback);
-  }
-
-  static getCookie(Function callback) {
-    getS("cookie", callback);
-  }
-
-  static getCookieExpires(Function callback) {
-    getS("expires", callback);
-  }
+class SpConsKy {
+  static String key_username = "username";
+  static String key_password = "password";
+  static String key_email = "email";
+  static String key_cookie_expires = "expires";
+  static String key_cookie = "cookie";
+  static String key_theme = "theme";
+  static String key_language = "language";
 }

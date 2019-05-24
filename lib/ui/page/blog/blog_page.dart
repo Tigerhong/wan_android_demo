@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:wan_android_demo/api/HttpService.dart';
 import 'package:wan_android_demo/common/Router.dart';
+import 'package:wan_android_demo/common/localization/Language.dart';
 import 'package:wan_android_demo/fonts/IconF.dart';
 import 'package:wan_android_demo/model/home/homebanner/HomeBannerItemModel.dart';
 import 'package:wan_android_demo/model/home/homebanner/HomeBannerModel.dart';
@@ -10,6 +11,10 @@ import 'package:wan_android_demo/ui/widget/BannerWidget.dart';
 import 'package:wan_android_demo/utils/Log.dart';
 
 class BlogPage extends StatefulWidget {
+  String title;
+
+  BlogPage({this.title});
+
   @override
   State<StatefulWidget> createState() => _BlogState();
 }
@@ -33,11 +38,11 @@ class _BlogState extends State<BlogPage> {
             icon: Icon(IconF.search),
           )
         ],
-        title: Text("博文", style: Theme.of(context).primaryTextTheme.title),
+        title: Text(widget.title, style: Theme.of(context).primaryTextTheme.title),
       ),
       body: ArticleListWidget(
         request: (page) {
-         return HttpService().getArticle(page);
+          return HttpService().getArticle(page);
         },
         headerCount: 1,
         header: getBanner(),
@@ -49,7 +54,7 @@ class _BlogState extends State<BlogPage> {
     if (_data == null) {
       return Container(
           child: Center(
-        child: Text("loading....."),
+        child: Text(Language.getString(context).tip_loading()),
       ));
     } else {
       List<Widget> page = List();

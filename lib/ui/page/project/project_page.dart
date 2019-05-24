@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:wan_android_demo/api/HttpService.dart';
+import 'package:wan_android_demo/common/localization/Language.dart';
 import 'package:wan_android_demo/fonts/IconF.dart';
 import 'package:wan_android_demo/model/porjectClassification/ProjectClassificationItemModel.dart';
 import 'package:wan_android_demo/model/porjectClassification/ProjectClassificationModel.dart';
 import 'package:wan_android_demo/ui/page/article_list/ArticleListWidget.dart';
-import 'package:wan_android_demo/ui/widget/HeadFootListWidget.dart';
 import 'package:wan_android_demo/utils/Log.dart';
 
 class ProjectPage extends StatefulWidget {
+  String title;
+
+  ProjectPage({this.title});
   @override
   State<StatefulWidget> createState() => _ProjectState();
 }
@@ -35,7 +38,7 @@ class _ProjectState extends State<ProjectPage> with TickerProviderStateMixin{
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text("项目"),
+        title: Text(widget.title),
         actions: <Widget>[IconButton(icon: Icon(IconF.search))],
         bottom: _list.length > 0
             ? TabBar(
@@ -63,7 +66,7 @@ class _ProjectState extends State<ProjectPage> with TickerProviderStateMixin{
                 });
           }).toList())
           : Center(
-        child: Text("暂无数据"),
+        child: Text(Language.getString(context).tip_nodata()),
       ),
     );
   }

@@ -5,6 +5,8 @@ import 'package:wan_android_demo/common/GlobalConfig.dart';
 import 'package:wan_android_demo/common/Router.dart';
 import 'package:wan_android_demo/common/Snack.dart';
 import 'package:wan_android_demo/common/User.dart';
+import 'package:wan_android_demo/common/localization/Language.dart';
+import 'package:wan_android_demo/state/scoped/ThemeModel.dart';
 import 'package:wan_android_demo/utils/Log.dart';
 
 class LoginRegisterPage extends StatefulWidget {
@@ -29,7 +31,7 @@ class _LoginState extends State<LoginRegisterPage> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text(isShowLogin ? "登录" : "注册"),
+        title: Text(isShowLogin ?Language.getString(context).login_title() :Language.getString(context).login_title_regise()),
       ),
       body: Container(
         margin: EdgeInsets.all(10),
@@ -40,16 +42,16 @@ class _LoginState extends State<LoginRegisterPage> {
               keyboardType: TextInputType.emailAddress, //输入的类型
               decoration: InputDecoration(
                   contentPadding: EdgeInsets.all(10),
-                  labelText: "用户名",
-                  hintText: "请输入用户名"),
+                  labelText:Language.getString(context).login_user_name(),
+                  hintText:Language.getString(context).login_user_name_hint()),
               autofocus: false,
             ),
             TextField(
                 controller: passwordTEC,
                 decoration: InputDecoration(
                     contentPadding: EdgeInsets.all(10),
-                    labelText: "密码",
-                    hintText: "请输入密码"),
+                    labelText:Language.getString(context).login_user_password(),
+                    hintText:Language.getString(context).login_user_password_hint()),
                 autofocus: false,
                 obscureText: true),
             buildLoginLogoutBt(context),
@@ -61,7 +63,7 @@ class _LoginState extends State<LoginRegisterPage> {
                       isShowLogin = !isShowLogin;
                       setState(() {});
                     },
-                    child: Text(isShowLogin ? "注册新账号" : "直接登录")),
+                    child: Text(isShowLogin ? Language.getString(context).login_text_regiser() :  Language.getString(context).login_text_login())),
               ),
             )
           ],
@@ -81,7 +83,7 @@ class _LoginState extends State<LoginRegisterPage> {
               color: GlobalConfig.colorPrimary,
               textColor: Colors.white,
               elevation: 4.0,
-              child: Text(isShowLogin ? "登录" : "注册"),
+              child: Text(isShowLogin ?Language.getString(context).login_title() :Language.getString(context).login_title_regise()),
 
               ///需要设置onPressed，color，textColor才能使用
               onPressed: () {
@@ -98,21 +100,21 @@ class _LoginState extends State<LoginRegisterPage> {
       showDialog(
           context: context,
           builder: (_) => AlertDialog(
-                title: Text("用户名不能为空"),
+                title: Text(Language.getString(context).login_no_user_name()),
               ));
       return;
     } else if (passwordTEC.text.length == 0) {
       showDialog(
           context: context,
           builder: (_) => AlertDialog(
-                title: Text("密码不能为空"),
+                title: Text(Language.getString(context).login_no_password()),
               ));
       return;
     }
     Log.logT("_login", "account:${accountTEC.text} pwd:${passwordTEC.text}");
     var callback = (bool loginOK, String errorMsg) {
       if (loginOK) {
-        Snack.show(context, "登录成功");
+        Snack.show(context, Language.getString(context).login_success());
         //snack中的context需要使用Scaffold里面的，
         Timer(Duration(milliseconds: 400), () {
           Router().back(context, args: {"isReload":true});

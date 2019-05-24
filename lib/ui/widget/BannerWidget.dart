@@ -25,8 +25,8 @@ class _BannerWidgetState extends State<BannerWidget> {
 
   getContent() {
     double screenWidth = MediaQueryData.fromWindow(ui.window).size.width;
-//    double screenHeight = MediaQueryData.fromWindow(ui.window).size.height;
-    double bannerHeight = screenWidth / 2;
+    double screenHeight = MediaQueryData.fromWindow(ui.window).size.height;
+    double bannerHeight = screenHeight / 3;
     double indicatorHeight = bannerHeight / 6;
     return Container(
       width: screenWidth,

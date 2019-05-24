@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:wan_android_demo/api/HttpService.dart';
+import 'package:wan_android_demo/common/localization/Language.dart';
 import 'package:wan_android_demo/fonts/IconF.dart';
 import 'package:wan_android_demo/model/porjectClassification/ProjectClassificationItemModel.dart';
 import 'package:wan_android_demo/model/porjectClassification/ProjectClassificationModel.dart';
@@ -7,6 +8,9 @@ import 'package:wan_android_demo/ui/page/article_list/ArticleListWidget.dart';
 import 'package:wan_android_demo/utils/Log.dart';
 
 class WeCahtPage extends StatefulWidget {
+  String title;
+
+  WeCahtPage({this.title});
   @override
   State<StatefulWidget> createState() => _WeCahtState();
 }
@@ -34,7 +38,7 @@ class _WeCahtState extends State<WeCahtPage> with TickerProviderStateMixin {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text("公众号"),
+        title: Text(widget.title),
         actions: <Widget>[IconButton(icon: Icon(IconF.search))],
         bottom: _list.length > 0
             ? TabBar(
@@ -55,14 +59,14 @@ class _WeCahtState extends State<WeCahtPage> with TickerProviderStateMixin {
               controller: controller,
               children: _list.map((ProjectClassificationItemModel _bean) {
                 return ArticleListWidget(
-                    TAG: "公众号${_bean.name}",
+                    TAG: "${widget.title}${_bean.name}",
                     headerCount: 0,
                     request: (page) {
                       return HttpService().getWxArticleListById(_bean.id, page);
                     });
               }).toList())
           : Center(
-              child: Text("暂无数据"),
+              child: Text(Language.getString(context).tip_nodata()),
             ),
     );
   }

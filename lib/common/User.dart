@@ -11,6 +11,7 @@ import 'package:wan_android_demo/utils/DateUtil.dart';
 class User {
   String userName;
   String password;
+  String email;
   String cookie;
   DateTime cookieExpiresTime;
   Map<String, String> _headerMap;
@@ -31,32 +32,37 @@ class User {
   }
 
   void logout() {
-    Sp.putUserName(null);
-    Sp.putPassword(null);
-    Sp.putCookie(null);
-    Sp.putCookieExpires(null);
+    Sp.put(SpConsKy.key_username,null);
+    Sp.put(SpConsKy.key_password,null);
+    Sp.put(SpConsKy.key_email,null);
+    Sp.put(SpConsKy.key_cookie,null);
+    Sp.put(SpConsKy.key_cookie_expires,null);
 
     cookie = null;
     userName = null;
     password = null;
+    email = null;
     _headerMap = null;
   }
 
   void refreshUserData({Function callback}) {
-    Sp.getPassword((pw) {
+    Sp.getS(SpConsKy.key_password,(pw) {
       this.password = pw;
     });
-    Sp.getUserName((str) {
+    Sp.getS(SpConsKy.key_username,(str) {
       this.userName = str;
       if (null != callback) {
         callback();
       }
     });
-    Sp.getCookie((str) {
+    Sp.getS(SpConsKy.key_cookie,(str) {
       this.cookie = str;
       _headerMap = null;
     });
-    Sp.getCookieExpires((str) {
+    Sp.getS(SpConsKy.key_email,(str) {
+      this.email = str;
+    });
+    Sp.getS(SpConsKy.key_cookie_expires,(str) {
       if (null != str && str.length > 0) {
         this.cookieExpiresTime = DateTime.parse(str);
         //提前3天请求新的cookie
@@ -86,8 +92,12 @@ class User {
     responseF.then((response) {
       var userModel = UserModel.fromJson(response.data);
       if (userModel.errorCode == 0) {
-        Sp.putUserName(userName);
-        Sp.putPassword(password);
+        Sp.put(SpConsKy.key_username,userName);
+        Sp.put(SpConsKy.key_password,password);
+        Sp.put(SpConsKy.key_email,userModel.data.email);
+        this.userName = userName;
+        this.password = password;
+        this.email = userModel.data.email;
         String cookie = "";
         DateTime expires;
         response.headers.forEach((String name, List<String> values) {
@@ -106,8 +116,8 @@ class User {
         });
         this.cookie = cookie;
         _headerMap = null;
-        Sp.putCookie(cookie);
-        Sp.putCookieExpires(expires.toIso8601String());
+        Sp.put(SpConsKy.key_cookie,cookie);
+        Sp.put(SpConsKy.key_cookie_expires,expires.toIso8601String());
         if (null != callback) callback(true, null);
       } else {
         if (null != callback) callback(false, userModel.errorMsg);

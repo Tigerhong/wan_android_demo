@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:wan_android_demo/api/HttpService.dart';
+import 'package:wan_android_demo/common/localization/Language.dart';
 import 'package:wan_android_demo/fonts/IconF.dart';
 import 'package:wan_android_demo/model/systemdata/SystemDataChildItem.dart';
 import 'package:wan_android_demo/model/systemdata/SystemDataItem.dart';
@@ -9,6 +10,10 @@ import 'package:wan_android_demo/ui/widget/CTabBarView.dart';
 import 'package:wan_android_demo/utils/Log.dart';
 
 class KnowledgeSystemsPage extends StatefulWidget {
+  String title;
+
+  KnowledgeSystemsPage({this.title});
+
   @override
   State<StatefulWidget> createState() => _KnowledgeSystemsState();
 }
@@ -26,6 +31,9 @@ class _KnowledgeSystemsState extends State<KnowledgeSystemsPage>
   void initState() {
     super.initState();
     HttpService().getSystemDataList((SystemDataModel bean) {
+      if (!mounted) {
+        return;
+      }
       setState(() {
         data = bean.data;
       });
@@ -38,11 +46,11 @@ class _KnowledgeSystemsState extends State<KnowledgeSystemsPage>
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text("体系"),
+        title: Text(widget.title),
         actions: <Widget>[IconButton(icon: Icon(IconF.search))],
         bottom: _buildTitlBottom(),
       ),
-      body: data.length > 0 ? _buildBody() : Text("暂无数据"),
+      body: data.length > 0 ? _buildBody() : Text(Language.getString(context).tip_nodata()),
     );
   }
 
@@ -94,7 +102,7 @@ class _KnowledgeSystemsState extends State<KnowledgeSystemsPage>
                       }).toList())),
             ],
           )
-        : Text("暂无数据");
+        : Text(Language.getString(context).tip_nodata());
   }
 
   Widget _buildSecondTabBar(SystemDataItem bean) {
@@ -125,11 +133,9 @@ class _KnowledgeSystemsState extends State<KnowledgeSystemsPage>
 
   _buildBody() {
     Log.logT(TAG, "_buildBody");
-    return
-      NotificationListener<ScrollNotification>(
+    return NotificationListener<ScrollNotification>(
         onNotification: _onNotification,
-        child:
-        TabBarView(
+        child: TabBarView(
             key: Key("tb${data[mainIndex].id}"),
             controller: _tabControllerInnerMaps[data[mainIndex].id],
             children: data[mainIndex].children.map((SystemDataChildItem _bean) {
@@ -140,9 +146,7 @@ class _KnowledgeSystemsState extends State<KnowledgeSystemsPage>
                   request: (page) {
                     return HttpService().getSystemDataInfoById(_bean.id, page);
                   });
-            }).toList()
-        )
-    );
+            }).toList()));
   }
 
   @override
