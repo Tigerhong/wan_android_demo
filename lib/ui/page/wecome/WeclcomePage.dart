@@ -9,13 +9,12 @@ import 'package:wan_android_demo/utils/Log.dart';
 
 ///欢迎界面
 class WeclcomePage extends StatefulWidget {
-
   @override
   State<StatefulWidget> createState() => WeclcomeState();
 }
 
 class WeclcomeState extends State {
-  String TAG="WeclcomePage";
+  String TAG = "WeclcomePage";
   bool hadInit = false;
 
   @override
@@ -40,19 +39,21 @@ class WeclcomeState extends State {
 
     String languageIndex = await Sp.getSAsync(SpConsKy.key_language);
     Log.logT(TAG, "languageIndex:::$languageIndex");
-    ThemeModel.of(context)
-        .setLocale(GlobalConfig.getLocale(int.parse(languageIndex ?? "0")));
+    if(languageIndex!=null){
+      ThemeModel.of(context)
+          .setLocale(GlobalConfig.getLocale(int.parse(languageIndex)));
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body:  Container(
+      body: Container(
         color: Colors.blue,
         child: Center(
           child: Text(
             Language.getString(context).welcome_title(),
-            style: TextStyle(color: Colors.white,fontSize: 20),
+            style: TextStyle(color: Colors.white, fontSize: 20),
           ),
         ),
       ),

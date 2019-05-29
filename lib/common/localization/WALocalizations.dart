@@ -21,7 +21,11 @@ class WALocalizations {
     Log.logT(TAG, "currentLocalized $locale");
     return _localizedValues[locale.languageCode];
   }
-
+  static WALocalizations get(BuildContext context) {
+    var of = Localizations.of(context, WALocalizations);
+    Log.logT(TAG, "of  ${of.toString()}");
+    return of;
+  }
   ///通过 Localizations 加载当前的 WALocalizations
   ///获取对应的 WAStringBase
   static WALocalizations of(BuildContext context) {

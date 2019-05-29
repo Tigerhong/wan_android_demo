@@ -5,17 +5,19 @@ import 'package:wan_android_demo/fonts/IconF.dart';
 import 'package:wan_android_demo/model/porjectClassification/ProjectClassificationItemModel.dart';
 import 'package:wan_android_demo/model/porjectClassification/ProjectClassificationModel.dart';
 import 'package:wan_android_demo/ui/page/article_list/ArticleListWidget.dart';
+import 'package:wan_android_demo/ui/widget/CAppBar.dart';
 import 'package:wan_android_demo/utils/Log.dart';
 
 class ProjectPage extends StatefulWidget {
   String title;
 
   ProjectPage({this.title});
+
   @override
   State<StatefulWidget> createState() => _ProjectState();
 }
 
-class _ProjectState extends State<ProjectPage> with TickerProviderStateMixin{
+class _ProjectState extends State<ProjectPage> with TickerProviderStateMixin {
   TabController controller;
   List<ProjectClassificationItemModel> _list = List();
 
@@ -36,40 +38,36 @@ class _ProjectState extends State<ProjectPage> with TickerProviderStateMixin{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text(widget.title),
-        actions: <Widget>[IconButton(icon: Icon(IconF.search))],
+      appBar: CAppBar(
+        title: widget.title,
         bottom: _list.length > 0
             ? TabBar(
-            isScrollable: true,
-            indicatorSize: TabBarIndicatorSize.label,
-            indicatorPadding: EdgeInsets.only(bottom: 2),
-            indicatorColor: Colors.white,
-            labelColor: Colors.white,
-            indicatorWeight: 1.0,
-            controller: controller,
-            tabs: _list.map((ProjectClassificationItemModel _bean) {
-              return Tab(text: _bean?.name);
-            }).toList())
+                isScrollable: true,
+                indicatorSize: TabBarIndicatorSize.label,
+                indicatorPadding: EdgeInsets.only(bottom: 2),
+                indicatorColor: Colors.white,
+                labelColor: Colors.white,
+                indicatorWeight: 1.0,
+                controller: controller,
+                tabs: _list.map((ProjectClassificationItemModel _bean) {
+                  return Tab(text: _bean?.name);
+                }).toList())
             : null,
       ),
       body: _list.length > 0
           ? TabBarView(
-          controller: controller,
-          children: _list.map((ProjectClassificationItemModel _bean) {
-            return ArticleListWidget(
-                TAG: "项目${_bean.name}",
-                headerCount: 0,
-                request: (page) {
-                  return HttpService().getPorjectListById(_bean.id, page);
-                });
-          }).toList())
+              controller: controller,
+              children: _list.map((ProjectClassificationItemModel _bean) {
+                return ArticleListWidget(
+                    TAG: "项目${_bean.name}",
+                    headerCount: 0,
+                    request: (page) {
+                      return HttpService().getPorjectListById(_bean.id, page);
+                    });
+              }).toList())
           : Center(
-        child: Text(Language.getString(context).tip_nodata()),
-      ),
+              child: Text(Language.getString(context).tip_nodata()),
+            ),
     );
   }
 }
-
-

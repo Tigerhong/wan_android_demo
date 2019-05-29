@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:wan_android_demo/common/User.dart';
 import 'package:wan_android_demo/common/localization/Language.dart';
 import 'package:wan_android_demo/fonts/IconF.dart';
-import 'package:wan_android_demo/ui/page/app_drawer/AppDrawer.dart';
+import 'package:wan_android_demo/state/provide/OpenDrawerWidget.dart';
+import 'package:wan_android_demo/ui/widget/AppDrawer.dart';
 import 'package:wan_android_demo/ui/page/blog/blog_page.dart';
 import 'package:wan_android_demo/ui/page/konwledge_system/konwledge_system_page.dart';
 import 'package:wan_android_demo/ui/page/project/project_page.dart';
@@ -75,11 +77,13 @@ class _AppState extends State<App> {
     super.dispose();
     _pageController.dispose();
   }
-
+GlobalKey<ScaffoldState> key=GlobalKey();
   @override
   Widget build(BuildContext context) {
     User().refreshUserData();
-    return Scaffold(
+
+    var scaffold = Scaffold(
+      key: key,
       drawer: AppDrawer(),
       //Center控件使其子控件在中间位置
       body: PageView(
@@ -98,6 +102,11 @@ class _AppState extends State<App> {
         },
       ),
     );
+    Provider.of<OpenDrawerhWidget>(context).addListener(() {
+      Log.logT("_AppDrawer", "OpenDrawerhWidget+++++++");
+      key.currentState.openDrawer();
+    });
+    return scaffold;
   }
 
   void _onPageChanged(int index) {

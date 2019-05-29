@@ -5,6 +5,7 @@ import 'package:wan_android_demo/fonts/IconF.dart';
 import 'package:wan_android_demo/model/porjectClassification/ProjectClassificationItemModel.dart';
 import 'package:wan_android_demo/model/porjectClassification/ProjectClassificationModel.dart';
 import 'package:wan_android_demo/ui/page/article_list/ArticleListWidget.dart';
+import 'package:wan_android_demo/ui/widget/CAppBar.dart';
 import 'package:wan_android_demo/utils/Log.dart';
 
 class WeCahtPage extends StatefulWidget {
@@ -36,10 +37,8 @@ class _WeCahtState extends State<WeCahtPage> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text(widget.title),
-        actions: <Widget>[IconButton(icon: Icon(IconF.search))],
+      appBar: CAppBar(
+        title: widget.title,
         bottom: _list.length > 0
             ? TabBar(
                 isScrollable: true,

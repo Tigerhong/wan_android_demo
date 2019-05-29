@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:provide/provide.dart';
+import 'package:provider/provider.dart';
 import 'package:wan_android_demo/api/HttpService.dart';
 import 'package:wan_android_demo/state/provide/RefreshWidget.dart';
 import 'package:wan_android_demo/ui/page/article_list/ArticleListWidget.dart';
@@ -21,20 +21,20 @@ class _MimeState extends State<ArticleCollectPage> {
 
   @override
   Widget build(BuildContext context) {
-    final currentCounter = Provide.value<RefreshWidget>(context);
-    currentCounter.addListener(() {
+    Log.logT("ArticleCollectPage", "build");
+    Provider.of<RefreshWidget>(context).addListener(() {
       Log.logT("ArticleCollectPage", "setListener+++++++");
       globalKey?.currentState?.reLoadData();
     });
-    Log.logT("ArticleCollectPage", "build");
     return Scaffold(
-        appBar: AppBar(
-          title: Text("文章收藏列表"),
-        ),
-        body: ArticleListWidget(
-            key: globalKey,
-            request: (page) {
-              return HttpService().getCollectArticle(page);
-            }));
+      appBar: AppBar(
+        title: Text("文章收藏列表"),
+      ),
+      body: ArticleListWidget(
+          key: globalKey,
+          request: (page) {
+            return HttpService().getCollectArticle(page);
+          }),
+    );
   }
 }

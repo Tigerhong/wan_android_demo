@@ -8,6 +8,7 @@ import 'package:wan_android_demo/model/home/homebanner/HomeBannerModel.dart';
 import 'package:wan_android_demo/ui/page/article_list/ArticleListWidget.dart';
 
 import 'package:wan_android_demo/ui/widget/BannerWidget.dart';
+import 'package:wan_android_demo/ui/widget/CAppBar.dart';
 import 'package:wan_android_demo/utils/Log.dart';
 
 class BlogPage extends StatefulWidget {
@@ -31,14 +32,8 @@ class _BlogState extends State<BlogPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(IconF.search),
-          )
-        ],
-        title: Text(widget.title, style: Theme.of(context).primaryTextTheme.title),
+      appBar: CAppBar(
+        title: widget.title,
       ),
       body: ArticleListWidget(
         request: (page) {

@@ -6,6 +6,7 @@ import 'package:wan_android_demo/model/systemdata/SystemDataChildItem.dart';
 import 'package:wan_android_demo/model/systemdata/SystemDataItem.dart';
 import 'package:wan_android_demo/model/systemdata/SystemDataModel.dart';
 import 'package:wan_android_demo/ui/page/article_list/ArticleListWidget.dart';
+import 'package:wan_android_demo/ui/widget/CAppBar.dart';
 import 'package:wan_android_demo/ui/widget/CTabBarView.dart';
 import 'package:wan_android_demo/utils/Log.dart';
 
@@ -44,10 +45,8 @@ class _KnowledgeSystemsState extends State<KnowledgeSystemsPage>
   Widget build(BuildContext context) {
     Log.logT(TAG, "build");
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text(widget.title),
-        actions: <Widget>[IconButton(icon: Icon(IconF.search))],
+      appBar: CAppBar(
+        title: widget.title,
         bottom: _buildTitlBottom(),
       ),
       body: data.length > 0 ? _buildBody() : Text(Language.getString(context).tip_nodata()),

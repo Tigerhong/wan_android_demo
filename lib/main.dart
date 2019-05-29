@@ -1,21 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:provide/provide.dart';
+import 'package:provider/provider.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:wan_android_demo/common/localization/WALocalizationsDelegate.dart';
+import 'package:wan_android_demo/state/provide/OpenDrawerWidget.dart';
 import 'package:wan_android_demo/state/provide/RefreshWidget.dart';
 import 'package:wan_android_demo/state/scoped/ThemeModel.dart';
 import 'package:wan_android_demo/ui/page/wecome/WeclcomePage.dart';
+import 'package:wan_android_demo/utils/Log.dart';
 
 void main() {
   ///强制应用竖屏
 //  SystemChrome.setPreferredOrientations(
 //      [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
-  var providers = Providers()
-    ..provide(Provider.function((ctx) => RefreshWidget()));
-  runApp(
-    ProviderNode(providers: providers, child: WanAndroidApp()),
-  );
+  runApp(MultiProvider(
+    providers: [
+      ListenableProvider<RefreshWidget>.value(listenable: RefreshWidget()),
+      ListenableProvider<OpenDrawerhWidget>.value(
+          listenable: OpenDrawerhWidget()),
+    ],
+    child: WanAndroidApp(),
+  ));
 }
 
 class WanAndroidApp extends StatelessWidget {
@@ -26,12 +31,13 @@ class WanAndroidApp extends StatelessWidget {
         child: ScopedModelDescendant<ThemeModel>(
           builder: (context, child, model) => MaterialApp(
                   localizationsDelegates: [
-                    WALocalizationsDelegate.delegate,
                     GlobalMaterialLocalizations.delegate,
                     GlobalWidgetsLocalizations.delegate,
+                    WALocalizationsDelegate.delegate,
                   ],
                   supportedLocales: [
-                    model.locale
+                     Locale('en', ''),
+                     Locale('zh', ''),
                   ],
                   locale: model.locale,
                   title: "WanAndroid",

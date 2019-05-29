@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:provide/provide.dart';
+import 'package:provider/provider.dart';
 import 'package:toast/toast.dart';
 import 'package:wan_android_demo/api/HttpService.dart';
 import 'package:wan_android_demo/common/GlobalConfig.dart';
@@ -163,7 +163,7 @@ class _ArticleItemState<ArticleItemWidget> extends State {
       Toast.show(tip, context,
           duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
 
-      Provide.value<RefreshWidget>(context).refresh();
+      Provider.of<RefreshWidget>(context).refresh();
       if (isSuccess) {
         setState(() {
           //这样可以刷新当前item

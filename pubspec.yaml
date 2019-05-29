@@ -28,13 +28,16 @@ dependencies:
   flutter_webview_plugin: ^0.3.3
   shared_preferences: ^0.5.2
   toast: ^0.1.4
-  provide: ^1.0.2
+  provider: ^2.0.1+1
   scoped_model: ^1.0.1
   flutter_localizations:
     sdk: flutter
 dev_dependencies:
+#  pedantic: ^1.4.0
+#  mockito: ^4.0.0
   flutter_test:
     sdk: flutter
+
 
 
 # For information on the generic Dart part of this file, see the

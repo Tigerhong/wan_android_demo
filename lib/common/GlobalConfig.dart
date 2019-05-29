@@ -32,6 +32,7 @@ class GlobalConfig {
     "主题7",
   ];
   static List<String> getLanguageListTitle = [
+    "默认",
     "中文",
     "english",
   ];
@@ -40,9 +41,12 @@ class GlobalConfig {
     Locale locale;
     switch (index) {
       case 0:
-        locale = Locale('zh', 'CH');
+//        locale = Locale('', '');
         break;
       case 1:
+        locale = Locale('zh', 'CH');
+        break;
+      case 2:
         locale = Locale('en', 'US');
         break;
     }

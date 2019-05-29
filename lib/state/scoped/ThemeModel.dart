@@ -8,6 +8,7 @@ import 'package:wan_android_demo/utils/Log.dart';
 class ThemeModel extends Model {
   String TAG="ThemeModel";
   /// Wraps [ScopedModel.of] for this [Model].
+  ///
   static ThemeModel of(BuildContext context) =>
       ScopedModel.of<ThemeModel>(context);
 
@@ -24,13 +25,11 @@ class ThemeModel extends Model {
     return GlobalConfig.getThemeListColor()[index];
   }
 
-  Locale locale = Locale('en', 'US');
+  Locale locale ;
 
   void setLocale(Locale _locale) {
     locale = _locale;
     Log.logT(TAG, "setLocale  locale:::${locale}");
     notifyListeners();
   }
-
-
 }
