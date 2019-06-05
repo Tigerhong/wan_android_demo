@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:wan_android_demo/ui/page/collect/article_collect_page.dart';
 import 'package:wan_android_demo/ui/page/login/LoginRegisterPage.dart';
-import 'package:wan_android_demo/ui/web/WebViewPage.dart';
+import 'package:wan_android_demo/ui/page/web/WebViewPage.dart';
 
 class Router{
 

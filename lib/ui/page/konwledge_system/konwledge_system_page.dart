@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:wan_android_demo/api/HttpService.dart';
 import 'package:wan_android_demo/common/localization/Language.dart';
-import 'package:wan_android_demo/fonts/IconF.dart';
 import 'package:wan_android_demo/model/systemdata/SystemDataChildItem.dart';
 import 'package:wan_android_demo/model/systemdata/SystemDataItem.dart';
-import 'package:wan_android_demo/model/systemdata/SystemDataModel.dart';
 import 'package:wan_android_demo/ui/page/article_list/ArticleListWidget.dart';
 import 'package:wan_android_demo/ui/widget/CAppBar.dart';
 import 'package:wan_android_demo/ui/widget/CTabBarView.dart';
+import 'package:wan_android_demo/ui/widget/NetworkWrapWidget.dart';
 import 'package:wan_android_demo/utils/Log.dart';
 
 class KnowledgeSystemsPage extends StatefulWidget {
@@ -29,28 +28,28 @@ class _KnowledgeSystemsState extends State<KnowledgeSystemsPage>
   Map<int, TabController> _tabControllerInnerMaps = Map();
 
   @override
-  void initState() {
-    super.initState();
-    HttpService().getSystemDataList((SystemDataModel bean) {
-      if (!mounted) {
-        return;
-      }
-      setState(() {
-        data = bean.data;
-      });
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
     Log.logT(TAG, "build");
     return Scaffold(
-      appBar: CAppBar(
-        title: widget.title,
-        bottom: _buildTitlBottom(),
-      ),
-      body: data.length > 0 ? _buildBody() : Text(Language.getString(context).tip_nodata()),
-    );
+        appBar: CAppBar(
+          title: widget.title,
+          bottom: _buildTitlBottom(),
+        ),
+        body: NetworkWrapWidget(
+          widget: _buildBody(),
+          call: getData,
+        ));
+  }
+
+  Future getData() async {
+    var bean = await HttpService().getSystemDataList();
+    if (!mounted) {
+      return Future.value(true);
+    }
+    setState(() {
+      data = bean.data;
+    });
+    return Future.value(true);
   }
 
   PreferredSize _appBarBottom;
@@ -132,6 +131,7 @@ class _KnowledgeSystemsState extends State<KnowledgeSystemsPage>
 
   _buildBody() {
     Log.logT(TAG, "_buildBody");
+    if (data.length == 0) return null;
     return NotificationListener<ScrollNotification>(
         onNotification: _onNotification,
         child: TabBarView(

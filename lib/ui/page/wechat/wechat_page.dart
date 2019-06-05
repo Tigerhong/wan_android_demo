@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:wan_android_demo/api/HttpService.dart';
-import 'package:wan_android_demo/common/localization/Language.dart';
-import 'package:wan_android_demo/fonts/IconF.dart';
 import 'package:wan_android_demo/model/porjectClassification/ProjectClassificationItemModel.dart';
-import 'package:wan_android_demo/model/porjectClassification/ProjectClassificationModel.dart';
 import 'package:wan_android_demo/ui/page/article_list/ArticleListWidget.dart';
 import 'package:wan_android_demo/ui/widget/CAppBar.dart';
+import 'package:wan_android_demo/ui/widget/NetworkWrapWidget.dart';
 import 'package:wan_android_demo/utils/Log.dart';
 
 class WeCahtPage extends StatefulWidget {
   String title;
 
   WeCahtPage({this.title});
+
   @override
   State<StatefulWidget> createState() => _WeCahtState();
 }
@@ -23,38 +22,29 @@ class _WeCahtState extends State<WeCahtPage> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    HttpService().getWxArticleChapters((ProjectClassificationModel bean) {
-      List<ProjectClassificationItemModel> data = bean.data;
-      Log.logT("_WeCahtState", " 公众号数据${bean.data.length}");
-      if (data?.length > 0) {
-        _list = data;
-        controller = TabController(length: _list.length, vsync: this);
-        setState(() {});
-      }
-    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CAppBar(
-        title: widget.title,
-        bottom: _list.length > 0
-            ? TabBar(
-                isScrollable: true,
-                indicatorSize: TabBarIndicatorSize.label,
-                indicatorPadding: EdgeInsets.only(bottom: 2),
-                indicatorColor: Colors.white,
-                labelColor: Colors.white,
-                indicatorWeight: 1.0,
-                controller: controller,
-                tabs: _list.map((ProjectClassificationItemModel _bean) {
-                  return Tab(text: _bean?.name);
-                }).toList())
-            : null,
-      ),
-      body: _list.length > 0
-          ? TabBarView(
+        appBar: CAppBar(
+          title: widget.title,
+          bottom: _list.length > 0
+              ? TabBar(
+                  isScrollable: true,
+                  indicatorSize: TabBarIndicatorSize.label,
+                  indicatorPadding: EdgeInsets.only(bottom: 2),
+                  indicatorColor: Colors.white,
+                  labelColor: Colors.white,
+                  indicatorWeight: 1.0,
+                  controller: controller,
+                  tabs: _list.map((ProjectClassificationItemModel _bean) {
+                    return Tab(text: _bean?.name);
+                  }).toList())
+              : null,
+        ),
+        body: NetworkWrapWidget(
+          widget: TabBarView(
               controller: controller,
               children: _list.map((ProjectClassificationItemModel _bean) {
                 return ArticleListWidget(
@@ -63,10 +53,20 @@ class _WeCahtState extends State<WeCahtPage> with TickerProviderStateMixin {
                     request: (page) {
                       return HttpService().getWxArticleListById(_bean.id, page);
                     });
-              }).toList())
-          : Center(
-              child: Text(Language.getString(context).tip_nodata()),
-            ),
-    );
+              }).toList()),
+          call: getData,
+        ));
+  }
+
+  Future getData() async {
+    var bean = await HttpService().getWxArticleChapters();
+    List<ProjectClassificationItemModel> data = bean.data;
+    Log.logT("_WeCahtState", " 公众号数据${bean.data.length}");
+    if (data?.length > 0) {
+      _list = data;
+      controller = TabController(length: _list.length, vsync: this);
+      setState(() {});
+    }
+    return Future.value(true);
   }
 }

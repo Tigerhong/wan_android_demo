@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:wan_android_demo/api/HttpService.dart';
 import 'package:wan_android_demo/common/Router.dart';
-import 'package:wan_android_demo/common/localization/Language.dart';
-import 'package:wan_android_demo/fonts/IconF.dart';
 import 'package:wan_android_demo/model/home/homebanner/HomeBannerItemModel.dart';
-import 'package:wan_android_demo/model/home/homebanner/HomeBannerModel.dart';
 import 'package:wan_android_demo/ui/page/article_list/ArticleListWidget.dart';
 
 import 'package:wan_android_demo/ui/widget/BannerWidget.dart';
 import 'package:wan_android_demo/ui/widget/CAppBar.dart';
+import 'package:wan_android_demo/ui/widget/NetworkWrapWidget.dart';
 import 'package:wan_android_demo/utils/Log.dart';
 
 class BlogPage extends StatefulWidget {
@@ -21,73 +19,64 @@ class BlogPage extends StatefulWidget {
 }
 
 class _BlogState extends State<BlogPage> {
-  List<HomeBannerItemModel> _data;
-
-  @override
-  void initState() {
-    super.initState();
-    _getBannerData();
-  }
+  List<HomeBannerItemModel> _data = List();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CAppBar(
-        title: widget.title,
-      ),
-      body: ArticleListWidget(
-        request: (page) {
-          return HttpService().getArticle(page);
-        },
-        headerCount: 1,
-        header: getBanner(),
-      ),
-    );
+        appBar: CAppBar(
+          title: widget.title,
+        ),
+        body: NetworkWrapWidget(
+          widget: ArticleListWidget(
+            TAG: "_BlogState_ArticleListWidget",
+            request: (page) {
+              return HttpService().getArticle(page);
+            },
+            headerCount: 1,
+            header: getBanner(),
+          ),
+          call: _getBannerData,
+        ));
   }
 
   Widget getBanner() {
-    if (_data == null) {
-      return Container(
-          child: Center(
-        child: Text(Language.getString(context).tip_loading()),
+    List<Widget> page = List();
+    for (HomeBannerItemModel bean in _data) {
+      page.add(GestureDetector(
+        onTap: () {
+          Router.openWeb(context, bean.url, bean.title);
+        },
+        child: Stack(
+          fit: StackFit.expand,
+          alignment: Alignment.center,
+          children: <Widget>[
+            Center(child: CircularProgressIndicator()),
+            Image.network(
+              bean.imagePath,
+              fit: BoxFit.fill,
+            )
+          ],
+        ),
       ));
-    } else {
-      List<Widget> page = List();
-      for (HomeBannerItemModel bean in _data) {
-        page.add(GestureDetector(
-          onTap: () {
-            Router.openWeb(context, bean.url, bean.title);
-          },
-          child: Stack(
-            fit: StackFit.expand,
-            alignment: Alignment.center,
-            children: <Widget>[
-              Center(child: CircularProgressIndicator()),
-              Image.network(
-                bean.imagePath,
-                fit: BoxFit.fill,
-              )
-            ],
-          ),
-        ));
-      }
-      return BannerWidget(itemPage: page);
     }
+    return BannerWidget(itemPage: page);
   }
 
   ///加载banner数据
-  void _getBannerData() {
-    HttpService().getBanner((HomeBannerModel _bean) {
-      if (!mounted) {
-        return;
-      }
-      if (_bean.data.length > 0) {
-        List<HomeBannerItemModel> data = _bean.data;
-        Log.log("${data.length}", tag: "HomeBannerModel");
-        setState(() {
-          _data = data;
-        });
-      }
-    });
+  Future _getBannerData() async {
+    var homeBannerModel = await HttpService().getBanner();
+    Log.log("1111", tag: "HomeBannerModel");
+    if (!mounted) {
+      return Future.value(true);
+    }
+    if (homeBannerModel.data.length > 0) {
+      List<HomeBannerItemModel> data = homeBannerModel.data;
+      Log.log("${data.length}", tag: "HomeBannerModel");
+      setState(() {
+        _data = data;
+      });
+    }
+    return Future.value(true);
   }
 }

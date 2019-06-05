@@ -72,4 +72,7 @@ class ZhString extends WAStringBase {
 
   @override
   String login_success() => "登录成功";
+
+  @override
+  String no_login()=>"请先登录 ! ! ! ";
 }

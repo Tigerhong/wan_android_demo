@@ -4,13 +4,16 @@ import 'package:wan_android_demo/common/localization/language/base/WAStringBase.
 class EnString extends WAStringBase {
   @override
   String app_name() => "WanAndroid Flutter app";
-  @override
-  String welcome_title()=> "helle,welcome to WanAndroid Flutter App !!!";
 
   @override
-  String tip_nodata()=> "No Data";
+  String welcome_title() => "helle,welcome to WanAndroid Flutter App !!!";
+
   @override
-  String tip_loading()=> "Loading...";
+  String tip_nodata() => "No Data";
+
+  @override
+  String tip_loading() => "Loading...";
+
   @override
   String app_bowen() => "Blog";
 
@@ -22,6 +25,7 @@ class EnString extends WAStringBase {
 
   @override
   String app_systems() => "system";
+
   @override
   String login() => "Login";
 
@@ -56,17 +60,20 @@ class EnString extends WAStringBase {
   String login_text_login() => "Direct login";
 
   @override
-  String login_user_name_hint()=>"Please enter  user name";
+  String login_user_name_hint() => "Please enter  user name";
 
   @override
-  String login_user_password_hint()=>"Please enter password ";
+  String login_user_password_hint() => "Please enter password ";
 
   @override
-  String login_no_password()=>"The password cannot be empty";
+  String login_no_password() => "The password cannot be empty";
 
   @override
-  String login_no_user_name() =>"The user name cannot be empty";
+  String login_no_user_name() => "The user name cannot be empty";
 
   @override
-  String login_success()=>"Login successfully ";
+  String login_success() => "Login successfully ";
+
+  @override
+  String no_login() => "please login ! ! ! ";
 }

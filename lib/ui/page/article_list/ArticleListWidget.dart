@@ -6,6 +6,8 @@ import 'package:wan_android_demo/model/home/homeArticle/HomeArticleItemModel.dar
 import 'package:wan_android_demo/model/home/homeArticle/HomeArticleModel.dart';
 import 'package:wan_android_demo/ui/page/article_list/ArticleItemWidget.dart';
 import 'package:wan_android_demo/ui/widget/HeadFootListWidget.dart';
+import 'package:wan_android_demo/ui/widget/NetworkWrapWidget.dart';
+import 'package:wan_android_demo/ui/widget/NoDataWidget.dart';
 import 'package:wan_android_demo/utils/Log.dart';
 
 typedef Future<HomeArticleModel> RequestData(int page);
@@ -36,13 +38,13 @@ class ArticleListState extends State<ArticleListWidget>
   int page = 0;
   int _articleSize = 0;
   bool _isShowFAB = false;
-  String emptyStr = "Loading...";
+  bool isNoData = false;
 
   @override
   void initState() {
     super.initState();
     Log.logT(widget.TAG, "initState()");
-    _getArticleData(page);
+//    _getArticleData(page);
   }
 
   @override
@@ -53,21 +55,22 @@ class ArticleListState extends State<ArticleListWidget>
 
   @override
   Widget build(BuildContext context) {
-    emptyStr = Language.getString(context).tip_nodata();
+    Log.logT(widget.TAG, "build build build");
     return Scaffold(
-      body: _articleDatas.length == 0
-          ? new Center(
-              child: Text(emptyStr),
-            )
-          : HeadFootListWidget(
-              _listItemCreator,
-              _articleDatas.length,
-              headerItemCount: widget.headerCount,
-              headerItemCreator: _headerItemCreator,
-              moreListener: _moreListener,
-              moreCreator: _moreCreator,
-              refreshListener: _refreshListener,
-              scrollControllerListener: _scrollControllerListener,
+      body: isNoData
+          ? NoDataWidget()
+          : NetworkWrapWidget(
+              widget: HeadFootListWidget(
+                _listItemCreator,
+                _articleDatas.length,
+                headerItemCount: widget.headerCount,
+                headerItemCreator: _headerItemCreator,
+                moreListener: _moreListener,
+                moreCreator: _moreCreator,
+                refreshListener: _refreshListener,
+                scrollControllerListener: _scrollControllerListener,
+              ),
+              call: getArticleData,
             ),
       floatingActionButton: _getFABWidget(),
     );
@@ -86,7 +89,7 @@ class ArticleListState extends State<ArticleListWidget>
     return widget.header;
   }
 
-  Future<void> _moreListener() async {
+  Future _moreListener() async {
     return await _getArticleData(++page);
   }
 
@@ -105,18 +108,7 @@ class ArticleListState extends State<ArticleListWidget>
     _getArticleData(page = 0);
   }
 
-  Future<void> _refreshListener() async {
-//    await widget.request(page = 0).then((bean) {
-//      if (!mounted) {
-//        return;
-//      }
-//      _articleDatas.clear();
-//      _articleSize = bean.data.size;
-//      Log.log("当前是第$page页，共$_articleSize", tag: "getArticleData");
-//      List<HomeArticleItemModel> data = bean.data.datas;
-//      _articleDatas.addAll(data);
-//      setState(() {});
-//    });
+  Future _refreshListener() async {
     _getArticleData(page = 0);
   }
 
@@ -131,11 +123,15 @@ class ArticleListState extends State<ArticleListWidget>
     });
   }
 
+  Future getArticleData() async {
+    return await _getArticleData(page);
+  }
+
   ///加载文章数据
-  _getArticleData(int page) async {
-    await widget.request(page).then((bean) {
+  Future _getArticleData(int page) async {
+    return await widget.request(page).then((bean) {
       if (!mounted) {
-        return;
+        return Future.value(true);
       }
       if (page == 0) {
         //当page==0的时候，说明下拉刷新，需要将数据重置
@@ -144,19 +140,24 @@ class ArticleListState extends State<ArticleListWidget>
       }
       if (bean.errorCode == 0) {
         _articleSize += bean?.data?.datas?.length ?? 0;
-        Log.log("当前是第$page页共${bean?.data?.pageCount}页，共${bean?.data?.total}条数据", tag: "${widget.TAG} getArticleData");
+        Log.log("当前是第$page页共${bean?.data?.pageCount}页，共${bean?.data?.total}条数据",
+            tag: "${widget.TAG} getArticleData");
         if (_articleSize == 0) {
-          emptyStr = Language.getString(context).tip_nodata();
+          String emptyStr = Language.getString(context).tip_nodata();
           Log.log("$emptyStr", tag: "${widget.TAG} getArticleData");
+          if (page == 0) {
+            isNoData = true;
+          }
         } else {
           List<HomeArticleItemModel> data = bean.data.datas;
           _articleDatas.addAll(data);
         }
+        setState(() {});
+        return Future.value(true);
       } else {
-        emptyStr = bean.errorMsg;
         Log.log("${bean.errorMsg}", tag: "${widget.TAG} getArticleData");
+        return Future.value(false);
       }
-      setState(() {});
     });
   }
 

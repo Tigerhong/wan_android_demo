@@ -47,4 +47,6 @@ abstract class WAStringBase {
   String login_no_password();
 
   String login_success();
+
+  String no_login();
 }

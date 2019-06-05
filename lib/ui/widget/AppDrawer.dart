@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:toast/toast.dart';
 import 'package:wan_android_demo/common/Router.dart';
 import 'package:wan_android_demo/common/User.dart';
 import 'package:wan_android_demo/common/localization/Language.dart';
@@ -14,7 +15,6 @@ class AppDrawer extends StatefulWidget {
 }
 
 class _AppDrawer extends State {
-
   @override
   Widget build(BuildContext context) {
     Widget userHeader = UserAccountsDrawerHeader(
@@ -29,71 +29,74 @@ class _AppDrawer extends State {
     );
     var itemColor = ThemeModel.of(context).getColor();
 
-    return  Drawer(
-            child: Container(
-                child: Column(
-              children: <Widget>[
-                userHeader, // 可在这里替换自定义的header
-                Expanded(
-                  child: ListView(
-                    padding: EdgeInsets.zero,
-                    children: <Widget>[
-                      ListTile(
-                          title: Text(
-                              Language.getString(context).article_collect()),
-                          leading: new CircleAvatar(
-                            backgroundColor: itemColor,
-                            child: new Icon(Icons.favorite),
-                          ),
-                          onTap: () {
-                            Router.openArticleCollectPage(context);
-                          }),
-                      ListTile(
-                        title: Text(Language.getString(context).switch_theme()),
-                        leading: new CircleAvatar(
-                          backgroundColor: itemColor,
-                          child: new Icon(Icons.color_lens),
-                        ),
-                        onTap: () {
-                          ThemeSelectDialog.show(context);
-                        },
-                      ),
-                      ListTile(
-                        title:
-                            Text(Language.getString(context).switch_language()),
-                        leading: new CircleAvatar(
-                          backgroundColor: itemColor,
-                          child: new Icon(Icons.language),
-                        ),
-                        onTap: () {
-                          LanguageDialog.show(context);
-                        },
-                      ),
-                    ],
+    return Drawer(
+        child: Container(
+            child: Column(
+      children: <Widget>[
+        userHeader, // 可在这里替换自定义的header
+        Expanded(
+          child: ListView(
+            padding: EdgeInsets.zero,
+            children: <Widget>[
+              ListTile(
+                  title: Text(Language.getString(context).article_collect()),
+                  leading: new CircleAvatar(
+                    backgroundColor: itemColor,
+                    child: new Icon(Icons.favorite),
                   ),
+                  onTap: () {
+                    if (User().isLogin()) {
+                      Router.openArticleCollectPage(context);
+                    } else {
+                      Toast.show(
+                          Language.getString(context).no_login(), context,
+                          duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
+                    }
+                  }),
+              ListTile(
+                title: Text(Language.getString(context).switch_theme()),
+                leading: new CircleAvatar(
+                  backgroundColor: itemColor,
+                  child: new Icon(Icons.color_lens),
                 ),
-                Container(
-                  margin: EdgeInsets.only(left: 10, right: 10),
-                  width: double.infinity,
-                  child: RaisedButton(
-                    color: Colors.yellow,
-                    textColor: Colors.white,
-                    onPressed: () {
-                      if (User().isLogin()) {
-                        LogoutConfirmDialog.showLogoutConfirmDialog(context,
-                            () {
-                          setState(() {});
-                        });
-                      } else {
-                        openLoginRegister(context);
-                      }
-                    },
-                    child: Text(
-                        "${User().isLogin() ? Language.getString(context).logout() : Language.getString(context).login()}"),
-                  ),
-                )
-              ],
-            )));
+                onTap: () {
+                  ThemeSelectDialog.show(context);
+                },
+              ),
+              ListTile(
+                title: Text(Language.getString(context).switch_language()),
+                leading: new CircleAvatar(
+                  backgroundColor: itemColor,
+                  child: new Icon(Icons.language),
+                ),
+                onTap: () {
+                  LanguageDialog.show(context);
+                },
+              ),
+            ],
+          ),
+        ),
+        Container(
+          margin: EdgeInsets.only(left: 10, right: 10),
+          width: double.infinity,
+          child: RaisedButton(
+            color: Colors.yellow,
+            textColor: Colors.white,
+            onPressed: () {
+              if (User().isLogin()) {
+                LogoutConfirmDialog.showLogoutConfirmDialog(context, () {
+                  setState(() {});
+                });
+              } else {
+                openLoginRegister(context);
+              }
+            },
+            child: Text(
+                "${User().isLogin() ? Language.getString(context).logout() : Language.getString(context).login()}"),
+          ),
+        )
+      ],
+    )));
   }
 
   void openLoginRegister(BuildContext context) async {

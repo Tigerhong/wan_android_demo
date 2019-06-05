@@ -7,6 +7,7 @@ import 'package:wan_android_demo/common/Router.dart';
 import 'package:wan_android_demo/fonts/IconF.dart';
 import 'package:wan_android_demo/model/home/homeArticle/HomeArticleItemModel.dart';
 import 'package:wan_android_demo/state/provide/RefreshWidget.dart';
+import 'package:wan_android_demo/utils/Log.dart';
 
 ///
 /// 这里使用了三种方式隐藏view
@@ -24,12 +25,14 @@ class ArticleItemWidget extends StatefulWidget {
 }
 
 class _ArticleItemState<ArticleItemWidget> extends State {
+  String TAG="_ArticleItemState";
   HomeArticleItemModel item;
 
   _ArticleItemState(this.item);
 
   @override
   Widget build(BuildContext context) {
+    Log.logT(TAG, "build build build build");
     return GestureDetector(
         onTap: () {
           Router.openWeb(context, item.link, item.title);

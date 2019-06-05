@@ -13,9 +13,12 @@ class HttpService {
 
   get _getOptions => Options(headers: User().getHeader());
 
-  void getBanner(Function callback) async {
-    Dio().get(Api.HOME_BANNER_URL, options: _getOptions).then((response) {
-      callback(HomeBannerModel.fromJson(response.data));
+  Future<HomeBannerModel> getBanner() async {
+    return await Dio()
+        .get(Api.HOME_BANNER_URL, options: _getOptions)
+        .then((response) {
+      Log.log("getBanner", tag: "HomeBannerModel");
+      return HomeBannerModel.fromJson(response.data);
     });
   }
 
@@ -28,11 +31,11 @@ class HttpService {
   }
 
   ///获取公众号列表
-  void getWxArticleChapters(Function callback) async {
-    Dio()
+  Future<ProjectClassificationModel> getWxArticleChapters() async {
+    return await Dio()
         .get(Api.HOME_WXARTICLE_CHAPTERS_URL, options: _getOptions)
         .then((response) {
-      callback(ProjectClassificationModel.fromJson(response.data));
+      return ProjectClassificationModel.fromJson(response.data);
     });
   }
 
@@ -46,9 +49,11 @@ class HttpService {
   }
 
   ///获取项目列表
-  void getPorjectChapters(Function callback) async {
-    Dio().get(Api.PROJECT_CHAPTERS_URL, options: _getOptions).then((response) {
-      callback(ProjectClassificationModel.fromJson(response.data));
+  Future<ProjectClassificationModel> getPorjectChapters() async {
+    return await Dio()
+        .get(Api.PROJECT_CHAPTERS_URL, options: _getOptions)
+        .then((response) {
+      return ProjectClassificationModel.fromJson(response.data);
     });
   }
 
@@ -129,19 +134,19 @@ class HttpService {
   }
 
   ///获取体系数据
-  void getSystemDataList(Function callBack) async {
+  Future<SystemDataModel> getSystemDataList() async {
     return await Dio()
-        .get(Api.SYSTEM_DATA_LIST_URL,
-        options: _getOptions)
+        .get(Api.SYSTEM_DATA_LIST_URL, options: _getOptions)
         .then((rep) {
-      callBack(SystemDataModel.fromJson(rep.data));
+      return SystemDataModel.fromJson(rep.data);
     });
   }
-/// 知识体系下的文章
+
+  /// 知识体系下的文章
   Future<HomeArticleModel> getSystemDataInfoById(int cid, int page) async {
     return await Dio()
         .get(Api.SYSTEM_DATA_INFO_URL + "/$page/json?cid=$cid",
-        options: _getOptions)
+            options: _getOptions)
         .then((rep) {
       return HomeArticleModel.fromJson(rep.data);
     });
